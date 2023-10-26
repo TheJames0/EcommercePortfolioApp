@@ -1,0 +1,56 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+.display_image {
+    object-fit: cover;
+    width: 150px;
+    height: 100px;  
+}
+.carousel_image {
+    object-fit: cover;
+    width: 100%;
+    height: 800px;
+}
+.page_image {
+    max-block-size: 500px;
+}
+.new-input-class {
+    /* Hide the default file input button */
+    display: none;
+}
+.custom_label_button {
+
+}
+.thumbnail_box{
+    width:250px;
+    height:120px;
+    padding:0px;
+    margin:0px;
+}
+.custom_grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Creates 4 equal-width columns */
+    grid-gap: 10px; /* Adds a 10px gap between grid items */
+    grid
+}
+/* Media query for screens smaller than 768px */
+@media (max-width: 900px) {
+    .custom_grid {
+        grid-template-columns: 1fr; /* Changes to a single column layout */
+    }
+}

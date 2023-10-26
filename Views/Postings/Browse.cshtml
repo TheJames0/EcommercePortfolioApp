@@ -1,0 +1,15 @@
+﻿@model IEnumerable<TestApp.Models.Posting>
+@using Microsoft.AspNetCore.Html;
+<div class="custom_grid container-fluid">
+	@foreach (var current in Model)
+    {
+        string base64String = Convert.ToBase64String(current.ImageThumbnail);
+        string imageSrc = $"data:image/png;base64,{base64String}";
+
+        <div type="button" class="btn btn-outline-primary mx-2 container-fluid" onclick="location.href='@Url.Action("Details", new { id = current.Id })'">
+                <img src="@imageSrc" alt="Image" class="display_image"  />
+                <p class="card-text">@current.Name</p>
+            </div>
+        
+    }
+</div>

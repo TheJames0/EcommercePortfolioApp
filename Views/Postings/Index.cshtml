@@ -1,0 +1,115 @@
+﻿@model IEnumerable<TestApp.Models.Posting>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="flex-lg-column">
+<h1>Recent Posts</h1>
+<a asp-action="Create">Create a post</a>
+@if (Model.Count() != 0)
+{
+    <div id="myCarousel" class="carousel slide" data-ride="carousel" style="width: 100%">
+        
+        <div class="carousel-inner">
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+
+
+                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                    @{
+                        var current = Model.ElementAt(i);
+                        string base64String = Convert.ToBase64String(current.ImageData);
+                        string imageSrc = $"data:image/png;base64,{base64String}";
+                    }
+                        <div class="card bg-light-subtle">
+                        <img src="@imageSrc" alt="Image" class="carousel_image mx-auto d-block" />
+                        <div class="card-body">
+                            <h1>@current.Name</h1>
+                            <p>@current.Description</p>
+                            <p>@current.Postdt.ToLongDateString() | @current.Postdt.Hour:00</p>
+
+                            
+                            <div class="card-footer d-flex justify-content-center text-bg-success">
+                                <h2>Price: £@current.Price</h2>
+                            </div>
+                                <div class="card-footer d-flex justify-content-center">
+                                
+                            @{
+                                <button type="button" class="btn btn-outline-primary mx-2" onclick="location.href='@Url.Action("Details", new { id = current.Id })'">Details</button>
+                                IdentityUser user = UserManager.GetUserAsync(User).Result;
+                            }
+                            @if (user != null)
+                            {
+                                @if (current.AuthorId == user.Id)
+                                {
+                                    
+                                        <button type="button" class="btn btn-outline-primary mx-2" onclick="location.href='@Url.Action("Edit", new { id = current.Id })'">Edit</button>
+                                        <button type="button" class="btn btn-outline-primary mx-2" onclick="location.href='@Url.Action("Delete", new { id = current.Id })'">Delete</button>
+                                    
+                                }
+                            }
+                                </div>
+                        </div>
+
+                    </div>
+                    @{
+                        string itemnum = "Item: " + (i + 1).ToString() + " of " + Model.Count().ToString();
+
+                    }
+                    <p class="text-bg-info text-xl-center">@itemnum</p>
+                </div>
+
+            }
+            @if (Model.Count() > 1)
+            {
+                <a class="carousel-control-prev" href="#myCarousel" role="button" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#myCarousel" role="button" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            }
+        </div>
+
+        
+    </div>
+    
+}
+
+<hr />
+    <!-- Indicators -->
+    <ol class="d-flex" style="width: 75rem; left:0px" >
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+
+            var current = Model.ElementAt(i);
+            string base64String = Convert.ToBase64String(current.ImageThumbnail);
+            string imageSrc = $"data:image/png;base64,{base64String}";
+            <div class="thumbnail_box">
+                <img src="@imageSrc" alt="Image" class="display_image" onclick="$('#myCarousel').carousel(@i)" />
+            </div>
+        }
+    </ol>
+</div>
+<button type="button" class="btn btn-outline-primary mx-3" onclick="location.href='@Url.Action("Browse")'">See all Postings</button>
+
+<script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Initialize the carousel
+        $('#myCarousel').carousel();
+        $('.carousel-item-link').on('click', function (event) {
+            event.preventDefault();
+
+            var targetIndex = $(this).data('slide-to');
+            $('#myCarousel').carousel(targetIndex);
+        });
+    });
+</script>
+
+    

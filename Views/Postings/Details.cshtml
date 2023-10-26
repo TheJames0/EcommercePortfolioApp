@@ -1,0 +1,85 @@
+﻿@using Microsoft.AspNetCore.Html;
+@model TestApp.Models.Posting
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "Details";
+}
+@functions{
+    public IHtmlContent CustomDisplayFunction(Posting model)
+    {
+        byte[] imageData = model.ImageData;
+        if (imageData != null && imageData.Length > 0)
+        {
+            string imageBase64 = Convert.ToBase64String(imageData);
+            string imageSrc = $"data:image;base64,{imageBase64}";
+
+            // Generate the <img> tag with the image source
+            var imgTag = new TagBuilder("img");
+            imgTag.Attributes.Add("src", imageSrc);
+            imgTag.Attributes.Add("alt", "Image");
+            imgTag.Attributes.Add("class", "custom-image");
+
+            // Return the <img> tag as HTML content
+            return imgTag;
+        }
+        else
+        {
+            // Return a placeholder message if no image data is available
+            return new HtmlString("<span>No image available</span>");
+        }
+    }
+}
+<h1>Details</h1>
+
+<div>
+    <h4>Posting</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ImageData)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model,"Image")
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Author)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Author)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+    </dl>
+</div>
+<div>
+    @{
+    IdentityUser user = UserManager.GetUserAsync(User).Result;
+    }
+    @if (user != null)
+    {
+        @if (Model.AuthorId == user.Id)
+        {
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
+        }
+    }
+    <a asp-action="Index">To recent</a>
+    <a asp-action="Browse">Back to List</a>
+</div>

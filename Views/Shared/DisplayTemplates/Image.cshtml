@@ -1,0 +1,6 @@
+﻿@model TestApp.Models.Posting
+@{
+    string base64String = Convert.ToBase64String(Model.ImageData);
+    string imageSrc = $"data:image/png;base64,{base64String}";
+}
+<img src="@imageSrc" alt="Image" class="img-fluid" />
